@@ -1,6 +1,5 @@
 import os
 import sys
-
 import pygame
 
 pygame.init()
@@ -29,34 +28,28 @@ def load_image(name, colorkey=None):
     return image
 
 
-def terminate():
-    pygame.quit()
-    sys.exit()
-
-
 def start_screen():
-    intro_text = ["ЗАСТАВКА", "",
-                  "Правила игры",
-                  "Если в правилах несколько строк,",
-                  "приходится выводить их построчно"]
+    intro_texts = ['Играть', 'Обучение', 'Выход']
 
     fon = pygame.transform.scale(load_image('start_back.jpg'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 30)
-    text_coord = 50
-    for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('white'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
+    font1 = pygame.font.Font(None, 70)
+    font2 = pygame.font.Font(None, 60)
+
+    text1 = font1.render("TerribleAge", True, (255, 255, 255))
+    screen.blit(text1, (270, 10))
+    x, y = 330, 150
+
+    for i in intro_texts:
+        text = font2.render(i, True, (116, 219, 36))
+        screen.blit(text, (x, y))
+        y += 150
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                terminate()
+                pygame.quit()
+                sys.exit()
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
                 return  # начинаем игру
@@ -64,8 +57,4 @@ def start_screen():
         clock.tick(FPS)
 
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+start_screen()
