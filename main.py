@@ -8,7 +8,7 @@ screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
 # колада (временно так, позже переделаем)
-deck = [(5, 6), (3, 4), (5, 8), (4, 3), (6, 2), (3, 5)]
+deck = [(5, 6), (3, 4), (5, 8), (4, 3), (6, 2), (3, 5), (5, 6), (3, 4), (5, 8), (4, 3), (6, 2), (3, 5)]
 inventory_player = []
 move = False
 
