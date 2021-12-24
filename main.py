@@ -33,25 +33,39 @@ def give_card(desk, inventory_player):
                 x = 400 + i * 30
                 y = 650
                 # исправить когда будут нарисованны текстуры
-                pygame.draw.rect(screen, (inventory_player[i][0] * 30, inventory_player[i][1] * 30, 255), (x, y, 150, 225))
+                name_image = 'carta_2.png'
+                image = load_image(name_image)
+                image1 = pygame.transform.scale(image, (150, 225))
+                screen.blit(image1, (x, y))
 
+
+
+def updete_image():
+    pass
 
 
 image = load_image('background.jpg')
 image1 = pygame.transform.scale(image, (width, height))
 screen.blit(image1, (0, 0))
+image = load_image('carta.jpg')
+image1 = pygame.transform.scale(image, (200, 300))
+screen.blit(image1, (990, 250))
 
-desk_button = pygame.draw.rect(screen, (0, 255, 0), (990, 250, 200, 300))
+
 move_button = pygame.draw.rect(screen, (0, 255, 255), (10, 360, 80, 40))
 
-place_card_opponent_1 = pygame.draw.rect(screen, (0, 255, 0), (150, 100, 150, 225), 8)
-place_card_opponent_2 = pygame.draw.rect(screen, (0, 255, 0), (350, 100, 150, 225), 8)
-place_card_opponent_3 = pygame.draw.rect(screen, (0, 255, 0), (550, 100, 150, 225), 8)
-place_card_opponent_4 = pygame.draw.rect(screen, (0, 255, 0), (750, 100, 150, 225), 8)
-place_card_player_1 = pygame.draw.rect(screen, (0, 255, 0), (150, 425, 150, 225), 8)
-place_card_player_2 = pygame.draw.rect(screen, (0, 255, 0), (350, 425, 150, 225), 8)
-place_card_player_3 = pygame.draw.rect(screen, (0, 255, 0), (550, 425, 150, 225), 8)
-place_card_player_4 = pygame.draw.rect(screen, (0, 255, 0), (750, 425, 150, 225), 8)
+
+image = load_image('pole.png')
+image1 = pygame.transform.scale(image, (150, 225))
+screen.blit(image1, (150, 100))
+screen.blit(image1, (350, 100))
+screen.blit(image1, (550, 100))
+screen.blit(image1, (750, 100))
+screen.blit(image1, (150, 425))
+screen.blit(image1, (350, 425))
+screen.blit(image1, (550, 425))
+screen.blit(image1, (750, 425))
+
 
 close = False
 while not close:
