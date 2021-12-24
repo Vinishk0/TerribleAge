@@ -8,7 +8,10 @@ screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
 # колада (временно так, позже переделаем)
-deck = [(5, 6), (3, 4), (5, 8), (4, 3), (6, 2), (3, 5), (5, 6), (3, 4), (5, 8), (4, 3), (6, 2), (3, 5)]
+deck = [(5, 6), (3, 4), (5, 8), (4, 3), (6, 2), (3, 5), (5, 6), (3, 4), (5, 8), (4, 3),
+        (6, 2), (3, 5), (5, 6), (3, 4), (5, 8), (4, 3), (6, 2), (3, 5), (5, 6), (3, 4), (5, 8),
+        (4, 3), (6, 2), (3, 5), (5, 6), (3, 4), (5, 8), (4, 3), (6, 2), (3, 5), (5, 6), (3, 4),
+        (5, 8), (4, 3), (6, 2)]
 inventory_player = []
 move = False
 
@@ -27,46 +30,53 @@ def give_card(desk, inventory_player):
             del deck[desk.index(card)]
             inventory_player.append(card)
             if not desk:
-                desk_button = pygame.draw.rect(screen, (255, 0, 0), (990, 250, 200, 300))
-                # перенести в отдельную ф-цию обновления
-            for i in range(len(inventory_player)):
-                x = 400 + i * 30
-                y = 650
-                # исправить когда будут нарисованны текстуры
-                name_image = 'carta_2.png'
-                image = load_image(name_image)
-                image1 = pygame.transform.scale(image, (150, 225))
-                screen.blit(image1, (x, y))
+                updete_image()
+            updete_image(card)
 
 
 
-def updete_image():
-    pass
+
+def updete_image(cart=None):
+    if cart == None:
+        desk_button = pygame.draw.rect(screen, (255, 0, 0), (990, 250, 200, 300))
+
+    image = load_image('background.jpg')
+    image1 = pygame.transform.scale(image, (width, height))
+    screen.blit(image1, (0, 0))
+    image = load_image('carta.jpg')
+    image1 = pygame.transform.scale(image, (200, 300))
+    screen.blit(image1, (990, 250))
+
+    for i in range(len(inventory_player)):
+        x = 400 + i * 30
+        y = 650
+        # исправить когда будут нарисованны текстуры
+        name_image = 'carta_2.png'
+        image = load_image(name_image)
+        image1 = pygame.transform.scale(image, (150, 225))
+        screen.blit(image1, (x, y))
+
+    image = load_image('pole.png')
+    image1 = pygame.transform.scale(image, (150, 225))
+    screen.blit(image1, (150, 100))
+    screen.blit(image1, (350, 100))
+    screen.blit(image1, (550, 100))
+    screen.blit(image1, (750, 100))
+    screen.blit(image1, (150, 425))
+    screen.blit(image1, (350, 425))
+    screen.blit(image1, (550, 425))
+    screen.blit(image1, (750, 425))
+
+    move_button = pygame.draw.rect(screen, (0, 255, 255), (10, 360, 80, 40))
+
+    font = pygame.font.Font(None, 30)
+    text = font.render(f"{len(deck)}/35", True, (227, 37, 107))
+    screen.blit(text, (1000, 560))
+    pygame.display.flip()
+    clock.tick(60)
 
 
-image = load_image('background.jpg')
-image1 = pygame.transform.scale(image, (width, height))
-screen.blit(image1, (0, 0))
-image = load_image('carta.jpg')
-image1 = pygame.transform.scale(image, (200, 300))
-screen.blit(image1, (990, 250))
-
-
-move_button = pygame.draw.rect(screen, (0, 255, 255), (10, 360, 80, 40))
-
-
-image = load_image('pole.png')
-image1 = pygame.transform.scale(image, (150, 225))
-screen.blit(image1, (150, 100))
-screen.blit(image1, (350, 100))
-screen.blit(image1, (550, 100))
-screen.blit(image1, (750, 100))
-screen.blit(image1, (150, 425))
-screen.blit(image1, (350, 425))
-screen.blit(image1, (550, 425))
-screen.blit(image1, (750, 425))
-
-
+updete_image()
 close = False
 while not close:
     for event in pygame.event.get():
