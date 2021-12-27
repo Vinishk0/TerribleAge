@@ -14,9 +14,10 @@ vil_x, vil_y, x_old, y_old, x_new, y_new = 1000, 550, 0, 0, 0, 0
 deck = [(1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3'), (1, 4, 'card_1_4'), (1, 5, 'card_1_5'),
         (2, 1, 'card_2_1'), (2, 2, 'card_2_2'), (2, 3, 'card_2_3'), (2, 4, 'card_2_4'), (2, 5, 'card_2_5'),
         (3, 1, 'card_3_1'), (3, 2, 'card_3_2'), (3, 3, 'card_3_3'), (3, 4, 'card_3_4'), (3, 5, 'card_3_5')]
-inventory_player = [(1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3')]
+inventory_player = [(1, 1, 'card_1_1'), (1, 2, 'card_2_1'), (1, 3, 'card_3_1')]
 move = False
 movement = False
+my_card = []
 list = []
 
 
@@ -45,10 +46,10 @@ def updete_image(desk=False, cart=None, index=None):
     screen.blit(image1, (0, 0))
 
     if None != index:
-        vil = inventory_player[index][2]
+        vil = inventory_player[index]
         del inventory_player[index]
     if vil and not movement:
-        image = load_image(vil + '.png')
+        image = load_image(vil[2] + '.png')
         image1 = pygame.transform.scale(image, (150, 225))
         spr = screen.blit(image1, (1000, 550))
         vil_x, vil_y = 1000, 550
@@ -57,7 +58,25 @@ def updete_image(desk=False, cart=None, index=None):
 
     for i in range(150, 950, 200):
         screen.blit(image1, (i, 100))
-        screen.blit(image1, (i, 450))
+        pole = screen.blit(image1, (i, 450))
+        if pole not in list:
+            list.append(pole)
+    if my_card:
+        for i in my_card:
+            name_image = i[2]
+            image = load_image(name_image + '.png')
+            image1 = pygame.transform.scale(image, (150, 225))
+            if i[-1] == 0:
+                screen.blit(image1, (150, 450))
+            elif i[-1] == 1:
+                screen.blit(image1, (350, 450))
+            elif i[-1] == 2:
+                screen.blit(image1, (550, 450))
+            elif i[-1] == 3:
+                screen.blit(image1, (750, 450))
+            else:
+                del list[list.index(i)]
+
 
     for i in range(len(inventory_player)):
         x = 400 + i * 30
@@ -151,14 +170,14 @@ def click_card():
 def dragging(new_vil=None):
     global spr
     if vil:
-        image = load_image(vil + '.png')
+        image = load_image(vil[2] + '.png')
         image1 = pygame.transform.scale(image, (150, 225))
         spr = screen.blit(image1, (vil_x, vil_y))
-        print(spr.collidelist(list))
+
 
 
 def functions():
-    global move, movement, ch, vil
+    global move, movement, ch, vil, spr, v
     if (mouse_pos[0] >= 990 and not 1190 < mouse_pos[0]) and (
             mouse_pos[1] >= 250 and not 550 < mouse_pos[1]):
         give_card(deck, inventory_player)
@@ -170,11 +189,17 @@ def functions():
             mouse_pos[1] >= 650 and not 800 < mouse_pos[1]):
         ch = True
         inventory_show()
-    if vil_x < event.pos[0] < vil_x + 150 and vil_y < event.pos[1] < vil_y + 225 and vil:
-        if movement == False:
-            movement = True
-        else:
-            movement = False
+    if vil:
+        if vil_x < event.pos[0] < vil_x + 150 and vil_y < event.pos[1] < vil_y + 225 and vil[2]:
+            if movement == False:
+                movement = True
+            else:
+                if spr.collidelist(list) + 1:
+                    dm, hp, img = vil
+                    my_card.append((dm, hp, img, spr.collidelist(list)))
+                    vil = ()
+                    updete_image()
+                movement = False
 
 
 updete_image(deck)
@@ -197,5 +222,4 @@ while not close:
                 updete_image()
     pygame.display.flip()
     clock.tick(60)
-
 pygame.quit()
