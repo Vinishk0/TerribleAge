@@ -6,6 +6,7 @@ pygame.init()
 size = WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
+but_sound = pygame.mixer.Sound('data/but_sound.mp3')
 
 FPS = 50
 
@@ -28,31 +29,39 @@ def load_image(name, colorkey=None):
     return image
 
 
-def start_screen():
-    intro_texts = ['Играть', 'Обучение', 'Выход']
+def buttons(x, y, width, height, photo_name1, photo_name2):
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    if x < mouse[0] < x + width:
+        if y < mouse[1] < y + height:
+            fon = pygame.transform.scale(load_image(photo_name1), (width, height))
+            screen.blit(fon, (x, y))
+            if click[0] == 1:
+                pygame.mixer.Sound.play(but_sound)
+                pygame.time.delay(300)
+        else:
+            fon = pygame.transform.scale(load_image(photo_name2), (width, height))
+            screen.blit(fon, (x, y))
+    else:
+        fon = pygame.transform.scale(load_image(photo_name2), (width, height))
+        screen.blit(fon, (x, y))
 
+
+def start_screen():
     fon = pygame.transform.scale(load_image('start_back.jpg'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
-    font1 = pygame.font.Font(None, 70)
-    font2 = pygame.font.Font(None, 60)
-
-    text1 = font1.render("TerribleAge", True, (255, 255, 255))
-    screen.blit(text1, (270, 10))
-    x, y = 330, 150
-
-    for i in intro_texts:
-        text = font2.render(i, True, (116, 219, 36))
-        screen.blit(text, (x, y))
-        y += 150
+    fon = pygame.transform.scale(load_image('1.png'), (250, 100))
+    screen.blit(fon, (275, 30))
 
     while True:
         for event in pygame.event.get():
+            buttons(300, 165, 200, 80, 'play2.png', 'play1.png')
+            buttons(300, 265, 200, 80, 'train2.png', 'train1.png')
+            buttons(300, 365, 200, 80, 'exit1.png', 'exit2.png')
+
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.KEYDOWN or \
-                    event.type == pygame.MOUSEBUTTONDOWN:
-                return  # начинаем игру
         pygame.display.flip()
         clock.tick(FPS)
 
