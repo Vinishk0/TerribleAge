@@ -7,11 +7,17 @@ size = width, height = 1200, 800
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 inventory_card = pygame.sprite.Group()
+vil = ()
+vil_x, vil_y, x_old, y_old, x_new, y_new = 1000, 550, 0, 0, 0, 0
 
 # колада (временно так, позже переделаем)
-deck = [(5, 6)]
-inventory_player = [(5, 6), (3, 4), (5, 8), (4, 3)]
+deck = [(1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3'), (1, 4, 'card_1_4'), (1, 5, 'card_1_5'),
+        (2, 1, 'card_2_1'), (2, 2, 'card_2_2'), (2, 3, 'card_2_3'), (2, 4, 'card_2_4'), (2, 5, 'card_2_5'),
+        (3, 1, 'card_3_1'), (3, 2, 'card_3_2'), (3, 3, 'card_3_3'), (3, 4, 'card_3_4'), (3, 5, 'card_3_5')]
+inventory_player = [(1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3')]
 move = False
+movement = False
+list = []
 
 
 def load_image(name):
@@ -19,6 +25,7 @@ def load_image(name):
     fullname = os.path.join('data', name)
     image = pygame.image.load(fullname)
     return image
+
 
 
 def give_card(desk, inventory_player):
@@ -32,30 +39,34 @@ def give_card(desk, inventory_player):
 
 
 def updete_image(desk=False, cart=None, index=None):
+    global vil, vil_x, vil_y, spr
     image = load_image('background.jpg')
     image1 = pygame.transform.scale(image, (width, height))
     screen.blit(image1, (0, 0))
+
+    if None != index:
+        vil = inventory_player[index][2]
+        del inventory_player[index]
+    if vil and not movement:
+        image = load_image(vil + '.png')
+        image1 = pygame.transform.scale(image, (150, 225))
+        spr = screen.blit(image1, (1000, 550))
+        vil_x, vil_y = 1000, 550
+    image = load_image('pole.png')
+    image1 = pygame.transform.scale(image, (150, 225))
+
+    for i in range(150, 950, 200):
+        screen.blit(image1, (i, 100))
+        screen.blit(image1, (i, 450))
 
     for i in range(len(inventory_player)):
         x = 400 + i * 30
         y = 650
         # исправить когда будут нарисованны текстуры
-        name_image = 'card_1_1.png'
-        image = load_image(name_image)
+        name_image = inventory_player[i][2]
+        image = load_image(name_image + '.png')
         image1 = pygame.transform.scale(image, (150, 225))
         screen.blit(image1, (x, y))
-
-    image = load_image('pole.png')
-    image1 = pygame.transform.scale(image, (150, 225))
-    screen.blit(image1, (150, 100))
-    screen.blit(image1, (350, 100))
-    screen.blit(image1, (550, 100))
-    screen.blit(image1, (750, 100))
-    screen.blit(image1, (150, 425))
-    screen.blit(image1, (350, 425))
-    screen.blit(image1, (550, 425))
-    screen.blit(image1, (750, 425))
-
     image = load_image('move.png')
     image1 = pygame.transform.scale(image, (100, 50))
     screen.blit(image1, (10, 360))
@@ -69,11 +80,8 @@ def updete_image(desk=False, cart=None, index=None):
         image = load_image('carta3.png')
         image1 = pygame.transform.scale(image, (200, 300))
         screen.blit(image1, (990, 200))
-    if None != index:
-        name_image = 'card_1_1.png'
-        image = load_image(name_image)
-        image1 = pygame.transform.scale(image, (150, 225))
-        screen.blit(image1, (1000, 550))
+    if movement:
+        dragging()
 
     pygame.display.flip()
     clock.tick(60)
@@ -102,40 +110,71 @@ def inventory_show():
         elif i == 4 or i == 7:
             x = 800
 
-        # исправить когда будут нарисованны текстуры
-        name_image = 'card_1_1.png'
-        image = load_image(name_image)
+        name_image = inventory_player[i - 2][2]
+        image = load_image(name_image + '.png')
         image1 = pygame.transform.scale(image, (150, 225))
         screen.blit(image1, (x, y))
 
 
+
 def click_card():
-    global deck
-    global ch
+    global deck, ch, movement
     index = None
-    if (mouse_pos[0] >= 200 and not 350 < mouse_pos[0]) and (
-            mouse_pos[1] >= 100 and not 325 < mouse_pos[1]):
+    if (mouse_pos[0] >= 10 and not 90 < mouse_pos[0]) and (
+            mouse_pos[1] >= 360 and not 400 < mouse_pos[1]):
+        ch = False
+        updete_image(deck, None, None)
+    elif (mouse_pos[0] >= 200 and not 350 < mouse_pos[0]) and (
+            mouse_pos[1] >= 100 and not 325 < mouse_pos[1]) and len(inventory_player) >= 1:
         index = 0
     elif (mouse_pos[0] >= 500 and not 650 < mouse_pos[0]) and (
-            mouse_pos[1] >= 100 and not 325 < mouse_pos[1]):
+            mouse_pos[1] >= 100 and not 325 < mouse_pos[1]) and len(inventory_player) >= 2:
         index = 1
     elif (mouse_pos[0] >= 800 and not 950 < mouse_pos[0]) and (
-            mouse_pos[1] >= 100 and not 325 < mouse_pos[1]):
+            mouse_pos[1] >= 100 and not 325 < mouse_pos[1]) and len(inventory_player) >= 3:
         index = 2
     elif (mouse_pos[0] >= 200 and not 350 < mouse_pos[0]) and (
-            mouse_pos[1] >= 400 and not 625 < mouse_pos[1]):
+            mouse_pos[1] >= 400 and not 625 < mouse_pos[1]) and len(inventory_player) >= 4:
         index = 3
     elif (mouse_pos[0] >= 500 and not 650 < mouse_pos[0]) and (
-            mouse_pos[1] >= 400 and not 625 < mouse_pos[1]):
+            mouse_pos[1] >= 400 and not 625 < mouse_pos[1]) and len(inventory_player) >= 5:
         index = 4
     elif (mouse_pos[0] >= 800 and not 950 < mouse_pos[0]) and (
-            mouse_pos[1] >= 400 and not 625 < mouse_pos[1]):
+            mouse_pos[1] >= 400 and not 625 < mouse_pos[1]) and len(inventory_player) >= 6:
         index = 5
-    print(index)
     if index != None:
         ch = False
-        del inventory_player[index]
+        movement = False
         updete_image(deck, None, index)
+
+
+def dragging(new_vil=None):
+    global spr
+    if vil:
+        image = load_image(vil + '.png')
+        image1 = pygame.transform.scale(image, (150, 225))
+        spr = screen.blit(image1, (vil_x, vil_y))
+        print(spr.collidelist(list))
+
+
+def functions():
+    global move, movement, ch, vil
+    if (mouse_pos[0] >= 990 and not 1190 < mouse_pos[0]) and (
+            mouse_pos[1] >= 250 and not 550 < mouse_pos[1]):
+        give_card(deck, inventory_player)
+        move = True
+    if (mouse_pos[0] >= 10 and not 90 < mouse_pos[0]) and (
+            mouse_pos[1] >= 360 and not 400 < mouse_pos[1]):
+        move = False
+    if (mouse_pos[0] >= 400 and not 700 < mouse_pos[0]) and (
+            mouse_pos[1] >= 650 and not 800 < mouse_pos[1]):
+        ch = True
+        inventory_show()
+    if vil_x < event.pos[0] < vil_x + 150 and vil_y < event.pos[1] < vil_y + 225 and vil:
+        if movement == False:
+            movement = True
+        else:
+            movement = False
 
 
 updete_image(deck)
@@ -147,24 +186,15 @@ while not close:
             close = True
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            if (mouse_pos[0] >= 990 and not 1190 < mouse_pos[0]) and (
-                    mouse_pos[1] >= 250 and not 550 < mouse_pos[1]) and not ch:
-                give_card(deck, inventory_player)
-                # move = True
-            if (mouse_pos[0] >= 10 and not 90 < mouse_pos[0]) and (
-                    mouse_pos[1] >= 360 and not 400 < mouse_pos[1]) and not ch:
-                move = False
-            if (mouse_pos[0] >= 400 and not 700 < mouse_pos[0]) and (
-                    mouse_pos[1] >= 650 and not 800 < mouse_pos[1]) and not ch:
-                ch = True
-                inventory_show()
+            if not ch:
+                functions()
             if ch:
-                if (mouse_pos[0] >= 10 and not 90 < mouse_pos[0]) and (
-                        mouse_pos[1] >= 360 and not 400 < mouse_pos[1]):
-                    ch = False
-                    updete_image(deck, None, None)
                 click_card()
-
+        if event.type == pygame.MOUSEMOTION:
+            if movement:
+                x_new, y_new = event.rel
+                vil_x, vil_y = vil_x + x_new, vil_y + y_new
+                updete_image()
     pygame.display.flip()
     clock.tick(60)
 
