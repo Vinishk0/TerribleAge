@@ -1,14 +1,12 @@
 import os
 from random import choice
 import pygame
+from easybot import EasyBot
 
-deck = [(1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3'), (1, 4, 'card_1_4'), (1, 5, 'card_1_5'),
-        (2, 1, 'card_2_1'), (2, 2, 'card_2_2'), (2, 3, 'card_2_3'), (2, 4, 'card_2_4'), (2, 5, 'card_2_5'),
-        (3, 1, 'card_3_1'), (3, 2, 'card_3_2'), (3, 3, 'card_3_3'), (3, 4, 'card_3_4'), (3, 5, 'card_3_5')]
-inventory_player = [(1, 1, 'card_1_1'), (1, 2, 'card_2_1'), (1, 3, 'card_3_1')]
 my_card = []
+bot_cards = []
 list = []
-
+inventory_player = [(1, 1, 'card_1_1'), (1, 2, 'card_2_1'), (1, 3, 'card_3_1')]
 
 class BaseGame:
     def __init__(self):
@@ -23,6 +21,9 @@ class BaseGame:
         self.vil = ()
         self.close = False
         self.ch = False
+        self.deck = [(1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3'), (1, 4, 'card_1_4'), (1, 5, 'card_1_5')]
+
+        self.eb = EasyBot()
         self.updete_image()
 
     def load_image(self, name):
@@ -36,9 +37,9 @@ class BaseGame:
         if desk:
             if len(inventory_player) < 6 and not self.move:
                 card = choice(desk)
-                del deck[desk.index(card)]
+                del self.deck[desk.index(card)]
                 inventory_player.append(card)
-                self.updete_image(deck, card, None)
+                self.updete_image(self.deck, card, None)
 
     def updete_image(self, desk=False, cart=None, index=None):
         image = self.load_image('background.jpg')
@@ -76,6 +77,22 @@ class BaseGame:
                     self.screen.blit(image1, (750, 450))
                 else:
                     del list[list.index(i)]
+        if bot_cards:
+            for i in bot_cards:
+                name_image = i[2]
+                image = self.load_image(name_image + '.png')
+                image1 = pygame.transform.scale(image, (150, 225))
+                if i[-1] == 0:
+                    self.screen.blit(image1, (150, 100))
+                elif i[-1] == 1:
+                    self.screen.blit(image1, (350, 100))
+                elif i[-1] == 2:
+                    self.screen.blit(image1, (550, 100))
+                elif i[-1] == 3:
+                    self.screen.blit(image1, (750, 100))
+                else:
+                    del list[list.index(i)]
+
 
         for i in range(len(inventory_player)):
             x = 400 + i * 30
@@ -90,11 +107,11 @@ class BaseGame:
         self.screen.blit(image1, (10, 360))
 
         font = pygame.font.Font(None, 30)
-        text = font.render(f"{len(deck)}/35", True, (227, 37, 107))
+        text = font.render(f"{len(self.deck)}/35", True, (227, 37, 107))
         self.screen.blit(text, (1000, 530))
         if None != cart:
             pass
-        if deck:
+        if self.deck:
             image = self.load_image('carta3.png')
             image1 = pygame.transform.scale(image, (200, 300))
             self.screen.blit(image1, (990, 200))
@@ -138,7 +155,7 @@ class BaseGame:
         if (mouse_pos[0] >= 10 and not 90 < mouse_pos[0]) and (
                 mouse_pos[1] >= 360 and not 400 < mouse_pos[1]):
             self.ch = False
-            self.updete_image(deck, None, None)
+            self.updete_image(self.deck, None, None)
         elif (mouse_pos[0] >= 200 and not 350 < mouse_pos[0]) and (
                 mouse_pos[1] >= 100 and not 325 < mouse_pos[1]) and len(inventory_player) >= 1:
             index = 0
@@ -160,7 +177,7 @@ class BaseGame:
         if index != None:
             self.ch = False
             self.movement = False
-            self.updete_image(deck, None, index)
+            self.updete_image(self.deck, None, index)
 
     def dragging(self, new_vil=None):
         if self.vil:
@@ -172,11 +189,12 @@ class BaseGame:
         mouse_pos = self.mouse_pos
         if (mouse_pos[0] >= 990 and not 1190 < mouse_pos[0]) and (
                 mouse_pos[1] >= 250 and not 550 < mouse_pos[1]):
-            self.give_card(deck, inventory_player)
+            self.give_card(self.deck, inventory_player)
             self.move = True
         if (mouse_pos[0] >= 10 and not 90 < mouse_pos[0]) and (
                 mouse_pos[1] >= 360 and not 400 < mouse_pos[1]):
             self.move = False
+            self.easy_bot()
         if (mouse_pos[0] >= 400 and not 700 < mouse_pos[0]) and (
                 mouse_pos[1] >= 650 and not 800 < mouse_pos[1]):
             self.ch = True
@@ -194,9 +212,20 @@ class BaseGame:
                         self.updete_image()
                     self.movement = False
 
+    def easy_bot(self):
+        self.bot_card, self.place_bot, new_deck = self.eb.return_func(self.deck)
+        if self.bot_card != None:
+            dm, hp, img = self.bot_card
+            bot_cards.append((dm, hp, img, self.place_bot))
+            self.deck = new_deck
+            self.updete_image()
+
+    def attack(self):
+        pass
+
     def run(self, update=False):
         if update == False:
-            self.updete_image(deck)
+            self.updete_image(self.deck)
         while not self.close:
             for self.event in pygame.event.get():
                 if self.event.type == pygame.QUIT:
@@ -215,7 +244,6 @@ class BaseGame:
             pygame.display.flip()
             self.clock.tick(60)
         pygame.quit()
-
 
 base_game = BaseGame()
 base_game.run()
