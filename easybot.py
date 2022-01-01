@@ -37,5 +37,5 @@ class EasyBot():
                 breakk = True
                 break
         if not breakk:
-            self.place = choice(self.place_occupied)
+            self.place = None
 

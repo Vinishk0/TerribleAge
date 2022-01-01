@@ -3,10 +3,12 @@ from random import choice
 import pygame
 from easybot import EasyBot
 
-my_card = []
+my_cards = []
 bot_cards = []
 list = []
-inventory_player = [(1, 1, 'card_1_1'), (1, 2, 'card_2_1'), (1, 3, 'card_3_1')]
+bot_place_occupied = []
+my_place_occupied = []
+inventory_player = []
 
 class BaseGame:
     def __init__(self):
@@ -16,13 +18,16 @@ class BaseGame:
         self.clock = pygame.time.Clock()
         self.inventory_card = pygame.sprite.Group()
         self.vil_x, self.vil_y, self.x_old, self.y_old, self.x_new, self.y_new = 1000, 550, 0, 0, 0, 0
+        self.my_hp = 15
+        self.bot_hp =15
         self.move = False
         self.movement = False
         self.vil = ()
         self.close = False
         self.ch = False
-        self.deck = [(1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3'), (1, 4, 'card_1_4'), (1, 5, 'card_1_5')]
-
+        self.deck = [(1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3'), (1, 4, 'card_1_4'), (1, 5, 'card_1_5'),
+        (2, 1, 'card_2_1'), (2, 2, 'card_2_2'), (2, 3, 'card_2_3'), (2, 4, 'card_2_4'), (2, 5, 'card_2_5'),
+        (3, 1, 'card_3_1'), (3, 2, 'card_3_2'), (3, 3, 'card_3_3'), (3, 4, 'card_3_4'), (3, 5, 'card_3_5')]
         self.eb = EasyBot()
         self.updete_image()
 
@@ -62,8 +67,8 @@ class BaseGame:
             pole = self.screen.blit(image1, (i, 450))
             if pole not in list:
                 list.append(pole)
-        if my_card:
-            for i in my_card:
+        if my_cards:
+            for i in my_cards:
                 name_image = i[2]
                 image = self.load_image(name_image + '.png')
                 image1 = pygame.transform.scale(image, (150, 225))
@@ -194,6 +199,7 @@ class BaseGame:
         if (mouse_pos[0] >= 10 and not 90 < mouse_pos[0]) and (
                 mouse_pos[1] >= 360 and not 400 < mouse_pos[1]):
             self.move = False
+            self.attack('player')
             self.easy_bot()
         if (mouse_pos[0] >= 400 and not 700 < mouse_pos[0]) and (
                 mouse_pos[1] >= 650 and not 800 < mouse_pos[1]):
@@ -206,22 +212,61 @@ class BaseGame:
                     self.movement = True
                 else:
                     if self.spr.collidelist(list) + 1:
-                        dm, hp, img = self.vil
-                        my_card.append((dm, hp, img, self.spr.collidelist(list)))
-                        self.vil = ()
-                        self.updete_image()
+                        if self.spr.collidelist(list) not in my_place_occupied:
+                            my_place_occupied.append(self.spr.collidelist(list))
+                            dm, hp, img = self.vil
+                            my_cards.append((dm, hp, img, self.spr.collidelist(list)))
+                            self.vil = ()
                     self.movement = False
+                    self.updete_image()
 
     def easy_bot(self):
         self.bot_card, self.place_bot, new_deck = self.eb.return_func(self.deck)
-        if self.bot_card != None:
+        if self.bot_card != None and self.place_bot != None:
             dm, hp, img = self.bot_card
             bot_cards.append((dm, hp, img, self.place_bot))
+            bot_place_occupied.append(self.place_bot)
             self.deck = new_deck
-            self.updete_image()
+            self.attack('bot')
 
-    def attack(self):
-        pass
+
+    def attack(self, side):
+        if side == 'bot':
+            for i in bot_place_occupied:
+                bot_dm, bot_hp, bot_img, bot_ind = bot_cards[bot_place_occupied.index(i)]
+                if i in my_place_occupied:
+                    try:
+                        my_dm, my_hp, my_img, my_ind = my_cards[my_place_occupied.index(i)]
+                        if my_hp - bot_dm < 0:
+                            del my_cards[my_place_occupied.index(i)]
+                            del my_place_occupied[my_place_occupied.index(i)]
+                        else:
+                            my_cards[my_place_occupied.index(i)] = my_dm, my_hp - bot_dm, my_img, my_ind
+                    except IndexError:
+                        self.my_hp -= bot_dm
+                else:
+                    self.my_hp -= bot_dm
+        elif side == 'player':
+            for i in my_place_occupied:
+                my_dm, my_hp, my_img, my_ind = my_cards[my_place_occupied.index(i)]
+                if i in bot_place_occupied:
+                    try:
+                        bot_dm, bot_hp, bot_img, bot_ind = bot_cards[bot_place_occupied.index(i)]
+                        if bot_hp - my_dm < 0:
+                            del bot_cards[bot_place_occupied.index(i)]
+                            del bot_place_occupied[bot_place_occupied.index(i)]
+                        else:
+                            bot_cards[bot_place_occupied.index(i)] = bot_dm, bot_hp - my_dm, bot_img, bot_ind
+                    except IndexError:
+                        self.bot_hp -= my_dm
+                else:
+                    self.bot_hp -= my_dm
+        print('Твои жизни', self.my_hp)
+        print('Жизни бота', self.bot_hp)
+        self.updete_image()
+
+
+
 
     def run(self, update=False):
         if update == False:
