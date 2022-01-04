@@ -2,6 +2,7 @@ import os
 import sys
 import pygame
 
+
 class Start:
     def __init__(self):
         pygame.init()
@@ -42,11 +43,13 @@ class Start:
                     pygame.mixer.Sound.play(self.but_sound)
                     pygame.time.delay(300)
                     if num == 0:
-                        pass
+                        pygame.quit()
+                        import main
                     if num == 1:
                         pass
                     if num == 2:
-                        pass
+                        pygame.quit()
+                        import shop_window
                     if num == 3:
                         sys.exit()
             else:

@@ -34,6 +34,16 @@ class BaseGame:
         self.eb = EasyBot()
         self.updete_image()
 
+    def result_wind(self):
+        if self.my_hp > 0 and self.bot_hp > 0:
+            font = pygame.font.Font(None, 30)
+            text = font.render(f"{self.my_hp}/{self.bot_hp}", True, (255, 255, 255))
+            self.screen.blit(text, (1100, 30))
+        elif self.my_hp <= 0:
+            import final_wind_def
+        elif self.bot_hp <= 0:
+            import final_window_win
+
     def load_image(self, name):
         # ф-ция открывания картинок
         fullname = os.path.join('data', name)
@@ -306,6 +316,7 @@ class BaseGame:
         if update == False:
             self.updete_image(self.deck)
         while not self.close:
+            self.result_wind()
             for self.event in pygame.event.get():
                 if self.event.type == pygame.QUIT:
                     self.close = True
