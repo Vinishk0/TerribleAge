@@ -8,7 +8,7 @@ bot_cards = []
 list = []
 bot_place_occupied = []
 my_place_occupied = []
-inventory_player = [(7, 3, 'card_1_1'), (2, 6, 'card_1_2'), (3, 3, 'card_1_3')]
+inventory_player = []
 
 
 class BaseGame:
@@ -19,15 +19,18 @@ class BaseGame:
         self.clock = pygame.time.Clock()
         self.inventory_card = pygame.sprite.Group()
         self.vil_x, self.vil_y, self.x_old, self.y_old, self.x_new, self.y_new = 1000, 550, 0, 0, 0, 0
-        self.my_hp = 15
-        self.bot_hp = 15
+        self.my_hp = 30
+        self.bot_hp = 30
         self.move = False
         self.movement = False
         self.vil = ()
         self.close = False
         self.ch = False
-        self.deck = [(1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3'), (1, 4, 'card_1_4'), (1, 5, 'card_1_5'),
-                     (1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3'), (1, 4, 'card_1_4'), (1, 5, 'card_1_5')]
+        self.deck = [(3, 4, 'card_1_1'), (2, 2, 'card_1_2'), (3, 1, 'card_1_3'), (1, 3, 'card_1_4'), (3, 2, 'card_1_5'),
+                     (1, 1, 'card_1_1'), (3, 3, 'card_1_2'), (2, 3, 'card_1_3'), (1, 4, 'card_1_4'), (2, 4, 'card_1_5'),
+                     (3, 4, 'card_1_1'), (2, 2, 'card_1_2'), (3, 1, 'card_1_3'), (1, 3, 'card_1_4'), (3, 2, 'card_1_5'),
+                     (1, 1, 'card_1_1'), (3, 3, 'card_1_2'), (2, 3, 'card_1_3'), (1, 4, 'card_1_4'), (2, 4, 'card_1_5')]
+
         # self.deck = [(1, 1, 'card_1_1'), (1, 2, 'card_1_2'), (1, 3, 'card_1_3'), (1, 4, 'card_1_4'), (1, 5, 'card_1_5'),
         # (2, 1, 'card_2_1'), (2, 2, 'card_2_2'), (2, 3, 'card_2_3'), (2, 4, 'card_2_4'), (2, 5, 'card_2_5'),
         # (3, 1, 'card_3_1'), (3, 2, 'card_3_2'), (3, 3, 'card_3_3'), (3, 4, 'card_3_4'), (3, 5, 'card_3_5')]
@@ -149,9 +152,18 @@ class BaseGame:
             font = pygame.font.Font(None, 30)
             text = font.render(f"{len(self.deck)}/35", True, (255, 255, 255))
             self.screen.blit(text, (1100, 530))
-        font = pygame.font.Font(None, 30)
-        text = font.render(f"{self.my_hp}/{self.bot_hp}", True, (255, 255, 255))
-        self.screen.blit(text, (1100, 30))
+        if self.my_hp > 0 and self.bot_hp > 0:
+            font = pygame.font.Font(None, 30)
+            text = font.render(f"{self.my_hp}/{self.bot_hp}", True, (255, 255, 255))
+            self.screen.blit(text, (1100, 30))
+        elif self.my_hp < 0:
+            font = pygame.font.Font(None, 120)
+            text = font.render(f"ТЫ ПРОИГРАЛ!", True, (0, 255, 0))
+            self.screen.blit(text, (300, 400))
+        elif self.bot_hp < 0:
+            font = pygame.font.Font(None, 120)
+            text = font.render(f"ТЫ ВЫЙГРАЛ!", True, (0, 255, 0))
+            self.screen.blit(text, (300, 400))
         if self.movement:
             self.dragging()
 
