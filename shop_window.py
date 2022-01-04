@@ -11,7 +11,7 @@ class Shop:
         self.clock = pygame.time.Clock()
         self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
         pygame.display.set_caption('Магазин')
-        self.music = pygame.mixer.Sound('data/start_mus.mp3')
+
         self.FPS = 60
         self.start_screen()
 
@@ -33,7 +33,10 @@ class Shop:
         return image
 
     def start_screen(self):
-        pygame.mixer.Sound.play(self.music)
+        pygame.mixer.music.load('data/start_mus.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.1)
+
         fon = pygame.transform.scale(self.load_image('start_back.jpg'), (self.WIDTH, self.HEIGHT))
         self.screen.blit(fon, (0, 0))
 
