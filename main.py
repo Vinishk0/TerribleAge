@@ -1,4 +1,5 @@
 import os
+import sys
 from random import choice
 import pygame
 from easybot import EasyBot
@@ -33,6 +34,7 @@ class BaseGame:
         # (3, 1, 'card_3_1'), (3, 2, 'card_3_2'), (3, 3, 'card_3_3'), (3, 4, 'card_3_4'), (3, 5, 'card_3_5')]
         self.eb = EasyBot()
         self.updete_image()
+        self.paused = False
 
     def result_wind(self):
         if self.my_hp > 0 and self.bot_hp > 0:
@@ -312,6 +314,25 @@ class BaseGame:
                     self.bot_hp -= my_dm
         self.updete_image()
 
+    def pause(self):
+        self.paused = True
+        while self.paused:
+            for self.event in pygame.event.get():
+                if self.event.type == pygame.QUIT:
+                    pygame.quit()
+
+            font = pygame.font.Font(None, 70)
+            text = font.render(f'Нажмите пробел, чтобы продолжить', True, (255, 255, 255))
+            self.screen.blit(text, (180, 220))
+
+            key = pygame.key.get_pressed()
+            if key[pygame.K_SPACE]:
+                self.paused = False
+
+            pygame.display.update()
+            self.clock.tick(15)
+        self.updete_image()
+
     def run(self, update=False):
         if update == False:
             self.updete_image(self.deck)
@@ -320,6 +341,9 @@ class BaseGame:
             for self.event in pygame.event.get():
                 if self.event.type == pygame.QUIT:
                     self.close = True
+                if self.event.type == pygame.KEYDOWN:
+                    if self.event.key == pygame.K_ESCAPE:
+                        self.pause()
                 if self.event.type == pygame.MOUSEBUTTONDOWN:
                     self.mouse_pos = pygame.mouse.get_pos()
                     if not self.ch:
@@ -331,6 +355,7 @@ class BaseGame:
                         self.x_new, self.y_new = self.event.rel
                         self.vil_x, self.vil_y = self.vil_x + self.x_new, self.vil_y + self.y_new
                         self.updete_image()
+
             pygame.display.flip()
             self.clock.tick(60)
         pygame.quit()
