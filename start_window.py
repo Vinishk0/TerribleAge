@@ -9,7 +9,6 @@ clock = pygame.time.Clock()
 but_sound = pygame.mixer.Sound('data/but_sound.mp3')
 pygame.display.set_caption('Меню')
 music = pygame.mixer.Sound('data/start_mus.mp3')
-
 FPS = 60
 
 
@@ -68,5 +67,6 @@ def start_screen():
                 sys.exit()
         pygame.display.flip()
         clock.tick(FPS)
+
 
 start_screen()
