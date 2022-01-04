@@ -9,7 +9,6 @@ clock = pygame.time.Clock()
 but_sound = pygame.mixer.Sound('data/but_sound.mp3')
 pygame.display.set_caption('Окно победителя!')
 music = pygame.mixer.Sound('data/winn_mus.mp3')
-
 FPS = 50
 
 
