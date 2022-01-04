@@ -56,7 +56,6 @@ def start_screen():
     fon = pygame.transform.scale(load_image('1.png'), (250, 100))
     screen.blit(fon, (275, 30))
 
-
     while True:
         for event in pygame.event.get():
             buttons(300, 165, 200, 80, 'play2.png', 'play1.png')
