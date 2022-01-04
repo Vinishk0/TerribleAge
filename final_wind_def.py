@@ -7,10 +7,10 @@ size = WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 but_sound = pygame.mixer.Sound('data/but_sound.mp3')
-pygame.display.set_caption('Меню')
-music = pygame.mixer.Sound('data/start_mus.mp3')
+pygame.display.set_caption('Окно проигрыша :(')
+music = pygame.mixer.Sound('data/def_mus.mp3')
 
-FPS = 60
+FPS = 50
 
 
 def load_image(name, colorkey=None):
@@ -51,19 +51,18 @@ def buttons(x, y, width, height, photo_name1, photo_name2):
 
 def start_screen():
     pygame.mixer.Sound.play(music)
-    fon = pygame.transform.scale(load_image('start_back.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('def_back.jpg'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
-    fon = pygame.transform.scale(load_image('1.png'), (250, 100))
-    screen.blit(fon, (275, 30))
+    text = pygame.transform.scale(load_image('defeat_img.png'), (500, 250))
+    screen.blit(text, (160, -10))
+    font = pygame.font.Font(None, 70)
 
-
+    n = 0
+    text = font.render(f"Ваш результат: {n}", True, (137, 129, 118))
+    screen.blit(text, (200, 220))
     while True:
         for event in pygame.event.get():
-            buttons(300, 165, 200, 80, 'play2.png', 'play1.png')
-            buttons(300, 265, 200, 80, 'train2.png', 'train1.png')
-            buttons(300, 365, 200, 80, 'exit1.png', 'exit2.png')
-            buttons(300, 465, 200, 80, 'shop2.png', 'shop1.png')
-
+            buttons(600, 500, 170, 90, 'def_cont_2.png', 'def_cont.png')
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
