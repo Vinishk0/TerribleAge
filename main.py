@@ -19,9 +19,12 @@ class BaseGame:
         self.screen = pygame.display.set_mode(self.size)
         self.clock = pygame.time.Clock()
         self.inventory_card = pygame.sprite.Group()
+        self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
         self.vil_x, self.vil_y, self.x_old, self.y_old, self.x_new, self.y_new = 1000, 550, 0, 0, 0, 0
+        pygame.display.set_caption('Игра')
         self.my_hp = 15
         self.bot_hp = 15
+        self.sound_count = 1
         self.move = False
         self.movement = False
         self.vil = ()
@@ -35,6 +38,7 @@ class BaseGame:
         self.eb = EasyBot()
         self.updete_image()
         self.paused = False
+
 
     def result_wind(self):
         if self.my_hp > 0 and self.bot_hp > 0:
@@ -149,9 +153,9 @@ class BaseGame:
             image = self.load_image(name_image + '.png')
             image1 = pygame.transform.scale(image, (150, 225))
             self.screen.blit(image1, (x, y))
-        image = self.load_image('move.png')
-        image1 = pygame.transform.scale(image, (100, 50))
-        self.screen.blit(image1, (10, 360))
+        # image = self.load_image('move.png')
+        # image1 = pygame.transform.scale(image, (100, 50))
+        # self.screen.blit(image1, (10, 360))
         if None != cart:
             pass
         if self.deck:
@@ -166,6 +170,13 @@ class BaseGame:
         self.screen.blit(text, (1100, 30))
         if self.movement:
             self.dragging()
+
+        if self.sound_count % 2 == 0:
+            sound_icon = pygame.transform.scale(self.load_image('sound2.png'), (25, 25))
+            self.screen.blit(sound_icon, (1155, 30))
+        else:
+            sound_icon = pygame.transform.scale(self.load_image('sound1.png'), (25, 25))
+            self.screen.blit(sound_icon, (1155, 30))
 
         pygame.display.flip()
         self.clock.tick(60)
@@ -201,6 +212,7 @@ class BaseGame:
             font = pygame.font.Font(None, 30)
             text = font.render(f"{dm}                 {hp}", True, (0, 0, 0))
             self.screen.blit(text, (x + 15, y + 195))
+
 
     def click_card(self):
         index = None
@@ -333,12 +345,48 @@ class BaseGame:
             self.clock.tick(15)
         self.updete_image()
 
+    def sounds_point(self):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        if 1150 < mouse[0] < 1150 + 25:
+            if 30 < mouse[1] < 30 + 25:
+                if click[0] == 1:
+                    self.sound_count += 1
+                    if self.sound_count % 2 == 0:
+                        pygame.mixer.music.pause()
+                        self.updete_image()
+                    else:
+                        pygame.mixer.music.unpause()
+                        self.updete_image()
+
+    def buttons(self, x, y, width, height, photo_name1, photo_name2):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        if x < mouse[0] < x + width:
+            if y < mouse[1] < y + height:
+                fon = pygame.transform.scale(self.load_image(photo_name1), (width, height))
+                self.screen.blit(fon, (x, y))
+                if click[0] == 1:
+                    pygame.mixer.Sound.play(self.but_sound)
+                    pygame.time.delay(300)
+            else:
+                fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
+                self.screen.blit(fon, (x, y))
+        else:
+            fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
+            self.screen.blit(fon, (x, y))
+
     def run(self, update=False):
+        pygame.mixer.music.load('data/play_mus.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.1)
         if update == False:
             self.updete_image(self.deck)
         while not self.close:
             self.result_wind()
             for self.event in pygame.event.get():
+                self.sounds_point()
+                self.buttons(10, 360, 100, 50, 'complite2.png', 'compite.png')
                 if self.event.type == pygame.QUIT:
                     self.close = True
                 if self.event.type == pygame.KEYDOWN:
@@ -357,7 +405,7 @@ class BaseGame:
                         self.updete_image()
 
             pygame.display.flip()
-            self.clock.tick(60)
+            self.clock.tick(200)
         pygame.quit()
 
 
