@@ -11,8 +11,8 @@ class Lose:
         self.clock = pygame.time.Clock()
         self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
         pygame.display.set_caption('Окно проигрыша :(')
-
-        self.FPS = 50
+        self.sound_count = 1
+        self.FPS = 60
         self.start_screen()
 
     def load_image(self, name, colorkey=None):
@@ -49,23 +49,43 @@ class Lose:
             fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
             self.screen.blit(fon, (x, y))
 
-    def start_screen(self):
-        pygame.mixer.music.load('data/def_mus.mp3')
-        pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.1)
+    def sounds_point(self):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        if 1150 < mouse[0] < 1150 + 25:
+            if 30 < mouse[1] < 30 + 25:
+                if click[0] == 1:
+                    self.sound_count += 1
+                    if self.sound_count % 2 == 0:
+                        pygame.mixer.music.pause()
+                    else:
+                        pygame.mixer.music.unpause()
 
+    def update_image(self):
         fon = pygame.transform.scale(self.load_image('def_back.jpg'), (self.WIDTH, self.HEIGHT))
         self.screen.blit(fon, (0, 0))
         text = pygame.transform.scale(self.load_image('defeat_img.png'), (500, 250))
         self.screen.blit(text, (360, -10))
         font = pygame.font.Font(None, 70)
-
-        n = 0
-        text = font.render(f"Ваш результат: {n}", True, (137, 129, 118))
+        text = font.render(f"Ваш результат: {0}", True, (137, 129, 118))
         self.screen.blit(text, (425, 220))
+        self.buttons(1000, 700, 170, 90, 'def_cont_2.png', 'def_cont.png')
+        if self.sound_count % 2 == 0:
+            sound_icon = pygame.transform.scale(self.load_image('sound2.png'), (25, 25))
+            self.screen.blit(sound_icon, (1150, 30))
+        else:
+            sound_icon = pygame.transform.scale(self.load_image('sound1.png'), (25, 25))
+            self.screen.blit(sound_icon, (1150, 30))
+
+    def start_screen(self):
+        pygame.mixer.music.load('data/def_mus.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.1)
+
         while True:
             for event in pygame.event.get():
-                self.buttons(1000, 700, 170, 90, 'def_cont_2.png', 'def_cont.png')
+                self.update_image()
+                self.sounds_point()
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
