@@ -3,6 +3,7 @@ from random import choice
 import pygame
 from easybot import EasyBot
 from normalbot import NormalBot
+from hardbot import HardBot
 
 my_cards = []
 bot_cards = []
@@ -27,7 +28,7 @@ class BaseGame:
         self.vil = ()
         self.move = False
         self.movement = False
-        self.bot = 'normal'
+        self.bot = 'hard'
         self.close = False
         self.ch = False
         self.deck = [(3, 4, 'card_1_1'), (2, 2, 'card_1_2'), (3, 1, 'card_1_3'), (1, 3, 'card_1_4'), (3, 2, 'card_1_5'),
@@ -40,6 +41,7 @@ class BaseGame:
         # (3, 1, 'card_3_1'), (3, 2, 'card_3_2'), (3, 3, 'card_3_3'), (3, 4, 'card_3_4'), (3, 5, 'card_3_5')]
         self.eb = EasyBot()
         self.nb = NormalBot()
+        self.hb = HardBot()
         self.updete_image()
 
     def load_image(self, name):
@@ -260,6 +262,8 @@ class BaseGame:
                 self.easy_bot()
             elif self.bot == 'normal':
                 self.normal_bot()
+            elif self.bot == 'hard':
+                self.hard_bot()
         if (mouse_pos[0] >= 400 and not 700 < mouse_pos[0]) and (
                 mouse_pos[1] >= 650 and not 800 < mouse_pos[1]):
             self.ch = True
@@ -299,6 +303,15 @@ class BaseGame:
             self.deck = new_deck
         self.attack('bot')
 
+    def hard_bot(self):
+        self.bot_card, self.place_bot, new_deck = self.hb.return_func(self.deck, self.new_place, self.new_card)
+        if self.bot_card != None and self.place_bot != None:
+            dm, hp, img = self.bot_card
+            bot_cards.append((dm, hp, img, self.place_bot))
+            bot_place_occupied.append(self.place_bot)
+            self.deck = new_deck
+        self.attack('bot')
+
 
 
     def attack(self, side):
@@ -330,6 +343,10 @@ class BaseGame:
                                 del bot_place_occupied[bot_place_occupied.index(i)]
                             elif self.bot == 'normal':
                                 self.nb.choice_card(bot_place_occupied.index(i))
+                                del bot_cards[bot_place_occupied.index(i)]
+                                del bot_place_occupied[bot_place_occupied.index(i)]
+                            elif self.bot == 'hard':
+                                self.hb.choice_card(bot_place_occupied.index(i))
                                 del bot_cards[bot_place_occupied.index(i)]
                                 del bot_place_occupied[bot_place_occupied.index(i)]
                         else:
