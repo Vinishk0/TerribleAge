@@ -32,7 +32,7 @@ class Winner:
 
         return image
 
-    def buttons(self, x, y, width, height, photo_name1, photo_name2):
+    def buttons(self, x, y, width, height, photo_name1, photo_name2, num):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         if x < mouse[0] < x + width:
@@ -42,6 +42,9 @@ class Winner:
                 if click[0] == 1:
                     pygame.mixer.Sound.play(self.but_sound)
                     pygame.time.delay(300)
+                    if num == 0:
+                        from choice_lvl import Levels
+                        Levels()
             else:
                 fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
                 self.screen.blit(fon, (x, y))
@@ -71,7 +74,7 @@ class Winner:
         n = 10
         text = font.render(f"Ваш результат: {n}", True, (216, 112, 147))
         self.screen.blit(text, (420, 220))
-        self.buttons(1000, 700, 170, 90, 'cont_win_2.png', 'cont_win.png')
+        self.buttons(1000, 700, 170, 90, 'cont_win_2.png', 'cont_win.png', 0)
         if self.sound_count % 2 == 0:
             sound_icon = pygame.transform.scale(self.load_image('sound2.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))

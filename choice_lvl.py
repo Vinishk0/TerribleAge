@@ -3,6 +3,7 @@ import sys
 import pygame
 
 
+
 class Levels:
     def __init__(self):
         pygame.init()
@@ -43,14 +44,15 @@ class Levels:
                     pygame.mixer.Sound.play(self.but_sound)
                     pygame.time.delay(300)
                     if num == 0:
-                        import main
-                        sys.exit()
+                        from main import BaseGame
+                        BaseGame()
                     if num == 1:
                         pass
                     if num == 2:
                         pass
                     if num == 3:
-                        import start_window
+                        from start_window import Start
+                        Start()
             else:
                 fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
                 self.screen.blit(fon, (x, y))
@@ -77,7 +79,7 @@ class Levels:
         self.screen.blit(fon, (480, 30))
         self.buttons(500, 165, 200, 80, 'normal_lvl2.png', 'normal_lvl.png', 0)
         self.buttons(500, 265, 200, 80, 'hard_vlv2.png', 'hard_lvl.png', 1)
-        self.buttons(500, 365, 200, 80, 'rules_lvl2.png', 'rules_lvl.png', 2)
+        self.buttons(500, 365, 200, 80, 'easy2.png', 'easy.png', 1)
         self.buttons(500, 465, 200, 80, 'menu_lvl2.png', 'menu_lvl.png', 3)
         if self.sound_count % 2 == 0:
             sound_icon = pygame.transform.scale(self.load_image('sound2.png'), (25, 25))
