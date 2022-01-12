@@ -43,7 +43,7 @@ class Winner:
                     pygame.mixer.Sound.play(self.but_sound)
                     pygame.time.delay(300)
                     if num == 0:
-                        from choice_lvl import Levels
+                        from main import Levels
                         Levels()
             else:
                 fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
@@ -97,6 +97,3 @@ class Winner:
                     sys.exit()
             pygame.display.flip()
             self.clock.tick(self.FPS)
-
-
-Winner()
