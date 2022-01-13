@@ -249,9 +249,6 @@ class BaseGame:
             image = self.load_image(name_image + '.png')
             image1 = pygame.transform.scale(image, (150, 225))
             self.screen.blit(image1, (x, y))
-        image = self.load_image('move.png')
-        image1 = pygame.transform.scale(image, (100, 50))
-        self.screen.blit(image1, (10, 360))
         if None != cart:
             pass
         if self.deck:
@@ -264,11 +261,16 @@ class BaseGame:
         if self.my_hp > 0 and self.bot_hp > 0:
             font = pygame.font.Font(None, 30)
             text = font.render(f"{self.my_hp}/{self.bot_hp}", True, (255, 255, 255))
-            self.screen.blit(text, (1100, 30))
+            self.screen.blit(text, (1000, 30))
+            image = self.load_image('heart.png')
+            image1 = pygame.transform.scale(image, (25, 25))
+            self.screen.blit(image1, (1055, 25))
+
         elif self.my_hp < 0:
             from final_wind_def import Lose
             Lose()
         elif self.bot_hp < 0:
+            self.counts()
             from final_window_win import Winner
             Winner()
         if self.movement:
@@ -496,6 +498,16 @@ class BaseGame:
                     else:
                         pygame.mixer.music.unpause()
                         self.updete_image()
+
+    def counts(self):
+        f = open("Results.txt", encoding="utf8")
+        data = f.readlines()
+        count = int(data[0])
+        f.close()
+        f = open("Results.txt", 'w')
+        count += 10
+        f.write(str(count))
+        f.close()
 
     def buttons(self, x, y, width, height, photo_name1, photo_name2):
         mouse = pygame.mouse.get_pos()
