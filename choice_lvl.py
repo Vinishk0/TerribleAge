@@ -3,16 +3,17 @@ import sys
 import pygame
 
 
-class Lose:
+
+class Levels:
     def __init__(self):
         pygame.init()
         self.size = self.WIDTH, self.HEIGHT = 1200, 800
         self.screen = pygame.display.set_mode(self.size)
         self.clock = pygame.time.Clock()
         self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
-        pygame.display.set_caption('Окно проигрыша :(')
-        self.sound_count = 1
+        pygame.display.set_caption('Меню')
         self.FPS = 60
+        self.sound_count = 1
         self.start_screen()
 
     def load_image(self, name, colorkey=None):
@@ -43,8 +44,15 @@ class Lose:
                     pygame.mixer.Sound.play(self.but_sound)
                     pygame.time.delay(300)
                     if num == 0:
-                        from main import Levels
-                        Levels()
+                        from main import BaseGame
+                        BaseGame()
+                    if num == 1:
+                        pass
+                    if num == 2:
+                        pass
+                    if num == 3:
+                        from start_window import Start
+                        Start()
             else:
                 fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
                 self.screen.blit(fon, (x, y))
@@ -65,14 +73,14 @@ class Lose:
                         pygame.mixer.music.unpause()
 
     def update_image(self):
-        fon = pygame.transform.scale(self.load_image('def_back.jpg'), (self.WIDTH, self.HEIGHT))
+        fon = pygame.transform.scale(self.load_image('start_back.jpg'), (self.WIDTH, self.HEIGHT))
         self.screen.blit(fon, (0, 0))
-        text = pygame.transform.scale(self.load_image('defeat_img.png'), (500, 250))
-        self.screen.blit(text, (360, -10))
-        font = pygame.font.Font(None, 70)
-        text = font.render(f"Ваш результат: {0}", True, (137, 129, 118))
-        self.screen.blit(text, (425, 220))
-        self.buttons(1000, 700, 170, 90, 'def_cont_2.png', 'def_cont.png', 0)
+        fon = pygame.transform.scale(self.load_image('levels.png'), (250, 100))
+        self.screen.blit(fon, (480, 30))
+        self.buttons(500, 165, 200, 80, 'normal_lvl2.png', 'normal_lvl.png', 0)
+        self.buttons(500, 265, 200, 80, 'hard_vlv2.png', 'hard_lvl.png', 1)
+        self.buttons(500, 365, 200, 80, 'easy2.png', 'easy.png', 1)
+        self.buttons(500, 465, 200, 80, 'menu_lvl2.png', 'menu_lvl.png', 3)
         if self.sound_count % 2 == 0:
             sound_icon = pygame.transform.scale(self.load_image('sound2.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
@@ -81,10 +89,9 @@ class Lose:
             self.screen.blit(sound_icon, (1150, 30))
 
     def start_screen(self):
-        pygame.mixer.music.load('data/def_mus.mp3')
+        pygame.mixer.music.load('data/start_mus.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
-
         while True:
             for event in pygame.event.get():
                 self.update_image()
@@ -92,5 +99,6 @@ class Lose:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
             pygame.display.flip()
             self.clock.tick(self.FPS)
