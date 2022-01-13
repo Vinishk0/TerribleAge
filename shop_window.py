@@ -52,9 +52,14 @@ class Shop:
             self.screen.blit(fon, (x, y))
 
     def update_image(self):
-        fon = pygame.transform.scale(self.load_image('start_back.jpg'), (self.WIDTH, self.HEIGHT))
+        fon = pygame.transform.scale(self.load_image('shop_back.jpg'), (self.WIDTH, self.HEIGHT))
         self.screen.blit(fon, (0, 0))
         self.buttons(980, 700, 200, 80, 'menu_lvl2.png', 'menu_lvl.png', 0)
+        self.buttons(200, 530, 100, 40, 'BUY2.png', 'BUY.png', 1)
+        self.buttons(560, 530, 100, 40, 'BUY2.png', 'BUY.png', 2)
+        self.buttons(910, 530, 100, 40, 'BUY2.png', 'BUY.png', 3)
+
+        self.files()
         if self.sound_count % 2 == 0:
             sound_icon = pygame.transform.scale(self.load_image('sound2.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
@@ -73,6 +78,17 @@ class Shop:
                         pygame.mixer.music.pause()
                     else:
                         pygame.mixer.music.unpause()
+
+    def files(self):
+        f = open("Results.txt", encoding="utf8")
+        data = f.readlines()
+        count = int(data[0])
+        f.close()
+        font = pygame.font.Font(None, 30)
+        text = font.render(f'{count}', True, (255, 255, 255))
+        self.screen.blit(text, (1000, 30))
+        sound_img = pygame.transform.scale(self.load_image('count_img.png'), (25, 25))
+        self.screen.blit(sound_img, (1025, 25))
 
     def start_screen(self):
         pygame.mixer.music.load('data/start_mus.mp3')
