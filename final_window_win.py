@@ -9,10 +9,15 @@ class Winner:
         self.size = self.WIDTH, self.HEIGHT = 1200, 800
         self.screen = pygame.display.set_mode(self.size)
         self.clock = pygame.time.Clock()
+
         self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
-        pygame.display.set_caption('TerriableAge')
+        pygame.mixer.music.load('data/winn_mus.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.1)
+
         self.sound_count = 1
         self.FPS = 60
+
         self.start_screen()
 
     '''Выбор изображения из папки проекта data'''
@@ -93,11 +98,6 @@ class Winner:
     '''Основной цикл окна'''
 
     def start_screen(self):
-        pygame.mixer.music.load('data/winn_mus.mp3')
-        pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.1)
-        self.update_image()
-
         while True:
             for event in pygame.event.get():
                 self.update_image()
@@ -107,6 +107,3 @@ class Winner:
                     sys.exit()
             pygame.display.flip()
             self.clock.tick(self.FPS)
-
-
-Winner()

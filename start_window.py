@@ -10,13 +10,21 @@ class Start:
         self.size = self.WIDTH, self.HEIGHT = 1200, 800
         self.screen = pygame.display.set_mode(self.size)
         self.clock = pygame.time.Clock()
+
+        pygame.display.set_caption('TerriableAge')  # название игры
+        icon = pygame.image.load('data/logo.png')  # иконка игры
+        pygame.display.set_icon(icon)
+
         self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
-        self.FPS = 60
-        self.sound_count = 1
         self.start_music = 'data/start_mus.mp3'
+
         pygame.mixer.music.load(self.start_music)
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
+
+        self.FPS = 60
+        self.sound_count = 1
+
         self.start_screen()
 
     '''Выбор изображения из папки проекта data'''

@@ -9,10 +9,18 @@ class Shop:
         self.size = self.WIDTH, self.HEIGHT = 1200, 800
         self.screen = pygame.display.set_mode(self.size)
         self.clock = pygame.time.Clock()
+
         self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
+        pygame.mixer.music.load('data/start_mus.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.1)
+
         self.sound_count = 1
         self.FPS = 60
+
         self.start_screen()
+
+    '''Выбор изображения из папки проекта data'''
 
     def load_image(self, name, colorkey=None):
         fullname = os.path.join('data', name)
@@ -30,6 +38,8 @@ class Shop:
             image = image.convert_alpha()
 
         return image
+
+    '''Функционал и анимация кнопок'''
 
     def buttons(self, x, y, width, height, photo_name1, photo_name2, num):
         mouse = pygame.mouse.get_pos()
@@ -51,6 +61,8 @@ class Shop:
             fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
             self.screen.blit(fon, (x, y))
 
+    '''Перерисовка изображения'''
+
     def update_image(self):
         fon = pygame.transform.scale(self.load_image('shop_back.jpg'), (self.WIDTH, self.HEIGHT))
         self.screen.blit(fon, (0, 0))
@@ -67,6 +79,8 @@ class Shop:
             sound_icon = pygame.transform.scale(self.load_image('sound1.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
 
+    ''' Включение и выключение музыки'''
+
     def sounds_point(self):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
@@ -79,6 +93,8 @@ class Shop:
                     else:
                         pygame.mixer.music.unpause()
 
+    '''Очки из файла проекта'''
+
     def files(self):
         f = open("Results.txt", encoding="utf8")
         data = f.readlines()
@@ -90,11 +106,9 @@ class Shop:
         sound_img = pygame.transform.scale(self.load_image('count_img.png'), (25, 25))
         self.screen.blit(sound_img, (1025, 25))
 
-    def start_screen(self):
-        pygame.mixer.music.load('data/start_mus.mp3')
-        pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.1)
+    '''Основной цикл окна'''
 
+    def start_screen(self):
         while True:
             for event in pygame.event.get():
                 self.update_image()
