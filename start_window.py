@@ -1,7 +1,9 @@
 import os
 import sys
 import pygame
-from choice_lvl import Levels
+from main import Levels
+from shop_window import Shop
+from rules import Rules
 
 
 class Start:
