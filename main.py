@@ -25,6 +25,8 @@ class Levels:
         self.sound_count = 1
         self.start_screen()
 
+    '''Выбор изображения из папки проекта data'''
+
     def load_image(self, name, colorkey=None):
         fullname = os.path.join('data', name)
         if not os.path.isfile(fullname):
@@ -41,6 +43,8 @@ class Levels:
             image = image.convert_alpha()
 
         return image
+
+    '''Функционал и анимация кнопок'''
 
     def buttons(self, x, y, width, height, photo_name1, photo_name2, num):
         mouse = pygame.mouse.get_pos()
@@ -68,6 +72,8 @@ class Levels:
             fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
             self.screen.blit(fon, (x, y))
 
+    '''Включение и выклчюение звука'''
+
     def sounds_point(self):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
@@ -79,6 +85,8 @@ class Levels:
                         pygame.mixer.music.pause()
                     else:
                         pygame.mixer.music.unpause()
+
+    '''Перирисовка изображения'''
 
     def update_image(self):
         fon = pygame.transform.scale(self.load_image('start_back.jpg'), (self.WIDTH, self.HEIGHT))
@@ -95,6 +103,8 @@ class Levels:
         else:
             sound_icon = pygame.transform.scale(self.load_image('sound1.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
+
+        '''Основной цикл окна'''
 
     def start_screen(self):
         pygame.mixer.music.load('data/start_mus.mp3')
