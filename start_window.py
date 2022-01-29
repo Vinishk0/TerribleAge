@@ -3,7 +3,7 @@ import sys
 import pygame
 from main import Levels
 from shop_window import Shop
-from rules import Rules
+from Rules_window import Rules
 
 
 class Start:
