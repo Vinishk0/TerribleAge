@@ -3,15 +3,15 @@ import sys
 import pygame
 
 
-class Shop:
+class Rules:
     def __init__(self):
         pygame.init()
         self.size = self.WIDTH, self.HEIGHT = 1200, 800
         self.screen = pygame.display.set_mode(self.size)
         self.clock = pygame.time.Clock()
 
-        self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
-        pygame.mixer.music.load('data/start_mus.mp3')
+        self.but_sound = pygame.mixer.Sound('data/musics/but_sound.mp3')
+        pygame.mixer.music.load('data/musics/start_mus.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
 
@@ -23,7 +23,7 @@ class Shop:
     '''Выбор изображения из папки проекта data'''
 
     def load_image(self, name, colorkey=None):
-        fullname = os.path.join('data', name)
+        fullname = os.path.join('data/', name)
         if not os.path.isfile(fullname):
             print(f"Файл с изображением '{fullname}' не найден")
             sys.exit()
@@ -46,7 +46,7 @@ class Shop:
         click = pygame.mouse.get_pressed()
         if x < mouse[0] < x + width:
             if y < mouse[1] < y + height:
-                fon = pygame.transform.scale(self.load_image(photo_name1), (width, height))
+                fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name1}'), (width, height))
                 self.screen.blit(fon, (x, y))
                 if click[0] == 1:
                     pygame.mixer.Sound.play(self.but_sound)
@@ -55,31 +55,26 @@ class Shop:
                         from start_window import Start
                         Start()
             else:
-                fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
+                fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name2}'), (width, height))
                 self.screen.blit(fon, (x, y))
         else:
-            fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
+            fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name2}'), (width, height))
             self.screen.blit(fon, (x, y))
 
     '''Перерисовка изображения'''
 
     def update_image(self):
-        fon = pygame.transform.scale(self.load_image('shop_back.jpg'), (self.WIDTH, self.HEIGHT))
+        fon = pygame.transform.scale(self.load_image('backgrounds_img/rules_fon.png'), (self.WIDTH, self.HEIGHT))
         self.screen.blit(fon, (0, 0))
         self.buttons(980, 700, 200, 80, 'menu_lvl2.png', 'menu_lvl.png', 0)
-        self.buttons(200, 530, 100, 40, 'BUY2.png', 'BUY.png', 1)
-        self.buttons(560, 530, 100, 40, 'BUY2.png', 'BUY.png', 2)
-        self.buttons(910, 530, 100, 40, 'BUY2.png', 'BUY.png', 3)
-
-        self.files()
         if self.sound_count % 2 == 0:
-            sound_icon = pygame.transform.scale(self.load_image('sound2.png'), (25, 25))
+            sound_icon = pygame.transform.scale(self.load_image('buttons_img/sound2.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
         else:
-            sound_icon = pygame.transform.scale(self.load_image('sound1.png'), (25, 25))
+            sound_icon = pygame.transform.scale(self.load_image('buttons_img/sound1.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
 
-    ''' Включение и выключение музыки'''
+    '''Вклчючение и выключение звука'''
 
     def sounds_point(self):
         mouse = pygame.mouse.get_pos()
@@ -92,19 +87,6 @@ class Shop:
                         pygame.mixer.music.pause()
                     else:
                         pygame.mixer.music.unpause()
-
-    '''Очки из файла проекта'''
-
-    def files(self):
-        f = open("Results.txt", encoding="utf8")
-        data = f.readlines()
-        count = int(data[0])
-        f.close()
-        font = pygame.font.Font(None, 30)
-        text = font.render(f'{count}', True, (255, 255, 255))
-        self.screen.blit(text, (1000, 30))
-        sound_img = pygame.transform.scale(self.load_image('count_img.png'), (25, 25))
-        self.screen.blit(sound_img, (1025, 25))
 
     '''Основной цикл окна'''
 

@@ -1,9 +1,9 @@
 import os
 import sys
 import pygame
-from main import Levels
-from shop_window import Shop
-from Rules_window import Rules
+from classes.main import Levels
+from classes.shop_window import Shop
+from classes.Rules_window import Rules
 
 
 class Start:
@@ -14,11 +14,11 @@ class Start:
         self.clock = pygame.time.Clock()
 
         pygame.display.set_caption('TerriableAge')  # название игры
-        icon = pygame.image.load('data/logo.png')  # иконка игры
+        icon = pygame.image.load('data/icons_img/logo.png')  # иконка игры
         pygame.display.set_icon(icon)
 
-        self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
-        self.start_music = 'data/start_mus.mp3'
+        self.but_sound = pygame.mixer.Sound('data/musics/but_sound.mp3')
+        self.start_music = 'data/musics/start_mus.mp3'
 
         pygame.mixer.music.load(self.start_music)
         pygame.mixer.music.play(-1)
@@ -32,7 +32,7 @@ class Start:
     '''Выбор изображения из папки проекта data'''
 
     def load_image(self, name, colorkey=None):
-        fullname = os.path.join('data', name)
+        fullname = os.path.join('data/', name)
         if not os.path.isfile(fullname):
             print(f"Файл с изображением '{fullname}' не найден")
             sys.exit()
@@ -55,7 +55,7 @@ class Start:
         click = pygame.mouse.get_pressed()
         if x < mouse[0] < x + width:
             if y < mouse[1] < y + height:
-                fon = pygame.transform.scale(self.load_image(photo_name1), (width, height))
+                fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name1}'), (width, height))
                 self.screen.blit(fon, (x, y))
                 if click[0] == 1:
                     pygame.mixer.Sound.play(self.but_sound)
@@ -69,10 +69,10 @@ class Start:
                     if num == 3:
                         sys.exit()
             else:
-                fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
+                fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name2}'), (width, height))
                 self.screen.blit(fon, (x, y))
         else:
-            fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
+            fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name2}'), (width, height))
             self.screen.blit(fon, (x, y))
 
     '''Включение и выключения музыки'''
@@ -92,19 +92,19 @@ class Start:
     '''Перерисовка окна меню'''
 
     def update_image(self):
-        fon = pygame.transform.scale(self.load_image('start_back.jpg'), (self.WIDTH, self.HEIGHT))
+        fon = pygame.transform.scale(self.load_image('backgrounds_img/start_back.jpg'), (self.WIDTH, self.HEIGHT))
         self.screen.blit(fon, (0, 0))
-        fon = pygame.transform.scale(self.load_image('1.png'), (250, 100))
+        fon = pygame.transform.scale(self.load_image('icons_img/1.png'), (250, 100))
         self.screen.blit(fon, (480, 30))
         self.buttons(500, 165, 200, 80, 'play2.png', 'play1.png', 0)
         self.buttons(500, 265, 200, 80, 'shop2.png', 'shop1.png', 1)
         self.buttons(500, 365, 200, 80, 'rules_lvl2.png', 'rules_lvl.png', 2)
         self.buttons(500, 465, 200, 80, 'exit1.png', 'exit2.png', 3)
         if self.sound_count % 2 == 0:
-            sound_icon = pygame.transform.scale(self.load_image('sound2.png'), (25, 25))
+            sound_icon = pygame.transform.scale(self.load_image('buttons_img/sound2.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
         else:
-            sound_icon = pygame.transform.scale(self.load_image('sound1.png'), (25, 25))
+            sound_icon = pygame.transform.scale(self.load_image('buttons_img/sound1.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
 
     '''Основной цикл окна'''

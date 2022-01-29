@@ -9,11 +9,10 @@ from hardbot import HardBot
 
 class Levels:
     def __init__(self):
-        pygame.init()
         self.size = self.WIDTH, self.HEIGHT = 1200, 800
         self.screen = pygame.display.set_mode(self.size)
         self.clock = pygame.time.Clock()
-        self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
+        self.but_sound = pygame.mixer.Sound('data/musics/but_sound.mp3')
         self.FPS = 60
         self.sound_count = 1
         self.start_screen()
@@ -21,7 +20,7 @@ class Levels:
     '''Выбор изображения из папки проекта data'''
 
     def load_image(self, name, colorkey=None):
-        fullname = os.path.join('data', name)
+        fullname = os.path.join('data/', name)
         if not os.path.isfile(fullname):
             print(f"Файл с изображением '{fullname}' не найден")
             sys.exit()
@@ -44,7 +43,7 @@ class Levels:
         click = pygame.mouse.get_pressed()
         if x < mouse[0] < x + width:
             if y < mouse[1] < y + height:
-                fon = pygame.transform.scale(self.load_image(photo_name1), (width, height))
+                fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name1}'), (width, height))
                 self.screen.blit(fon, (x, y))
                 if click[0] == 1:
                     pygame.mixer.Sound.play(self.but_sound)
@@ -59,10 +58,10 @@ class Levels:
                         from start_window import Start
                         Start()
             else:
-                fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
+                fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name2}'), (width, height))
                 self.screen.blit(fon, (x, y))
         else:
-            fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
+            fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name2}'), (width, height))
             self.screen.blit(fon, (x, y))
 
     '''Включение и выклчюение звука'''
@@ -82,25 +81,25 @@ class Levels:
     '''Перирисовка изображения'''
 
     def update_image(self):
-        fon = pygame.transform.scale(self.load_image('start_back.jpg'), (self.WIDTH, self.HEIGHT))
+        fon = pygame.transform.scale(self.load_image('backgrounds_img/start_back.jpg'), (self.WIDTH, self.HEIGHT))
         self.screen.blit(fon, (0, 0))
-        fon = pygame.transform.scale(self.load_image('levels.png'), (250, 100))
+        fon = pygame.transform.scale(self.load_image('icons_img/levels.png'), (250, 100))
         self.screen.blit(fon, (480, 30))
         self.buttons(500, 165, 200, 80, 'easy2.png', 'easy.png', 0)
         self.buttons(500, 265, 200, 80, 'normal_lvl2.png', 'normal_lvl.png', 1)
         self.buttons(500, 365, 200, 80, 'hard_vlv2.png', 'hard_lvl.png', 2)
         self.buttons(500, 465, 200, 80, 'menu_lvl2.png', 'menu_lvl.png', 3)
         if self.sound_count % 2 == 0:
-            sound_icon = pygame.transform.scale(self.load_image('sound2.png'), (25, 25))
+            sound_icon = pygame.transform.scale(self.load_image('buttons_img/sound2.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
         else:
-            sound_icon = pygame.transform.scale(self.load_image('sound1.png'), (25, 25))
+            sound_icon = pygame.transform.scale(self.load_image('buttons_img/sound1.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
 
         '''Основной цикл окна'''
 
     def start_screen(self):
-        pygame.mixer.music.load('data/start_mus.mp3')
+        pygame.mixer.music.load('data/musics/start_mus.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
         while True:
@@ -108,16 +107,13 @@ class Levels:
                 self.update_image()
                 self.sounds_point()
                 if event.type == pygame.QUIT:
-                    pygame.quit()
                     sys.exit()
-
             pygame.display.flip()
             self.clock.tick(self.FPS)
 
 
 class BaseGame:
     def __init__(self, level):
-        pygame.init()
         self.size = self.width, self.height = 1200, 800
         self.screen = pygame.display.set_mode(self.size)
         self.clock = pygame.time.Clock()
@@ -128,7 +124,7 @@ class BaseGame:
         self.bot_hp = 30
         self.new_place = 0
         self.new_card = (0, 0)
-        self.but_sound = pygame.mixer.Sound('data/but_sound.mp3')
+        self.but_sound = pygame.mixer.Sound('data/musics/but_sound.mp3')
         self.sound_count = 1
         self.vil = ()
         self.move = False
@@ -154,7 +150,7 @@ class BaseGame:
 
     def load_image(self, name):
         # ф-ция открывания картинок
-        fullname = os.path.join('data', name)
+        fullname = os.path.join('data/', name)
         image = pygame.image.load(fullname)
         return image
 
@@ -168,7 +164,7 @@ class BaseGame:
                 self.updete_image(self.deck, card, None)
 
     def updete_image(self, desk=False, cart=None, index=None):
-        image = self.load_image('background.jpg')
+        image = self.load_image('backgrounds_img/background.jpg')
         image1 = pygame.transform.scale(image, (self.width, self.height))
         self.screen.blit(image1, (0, 0))
 
@@ -176,7 +172,7 @@ class BaseGame:
             self.vil = self.inventory_player[index]
             del self.inventory_player[index]
         if self.vil and not self.movement:
-            image = self.load_image(self.vil[2] + '.png')
+            image = self.load_image(f'cards_img/{self.vil[2]}.png')
             image1 = pygame.transform.scale(image, (150, 225))
             self.spr = self.screen.blit(image1, (1000, 550))
             dm, hp, img = self.vil
@@ -184,7 +180,7 @@ class BaseGame:
             text = font.render(f"{dm}                 {hp}", True, (0, 0, 0))
             self.screen.blit(text, (1015, 745))
             self.vil_x, self.vil_y = 1000, 550
-        image = self.load_image('pole.png')
+        image = self.load_image('icons_img/pole.png')
         image1 = pygame.transform.scale(image, (150, 225))
 
         for i in range(150, 950, 200):
@@ -195,7 +191,7 @@ class BaseGame:
         if self.my_cards:
             for i in self.my_cards:
                 name_image = i[2]
-                image = self.load_image(name_image + '.png')
+                image = self.load_image(f'cards_img/{name_image}.png')
                 image1 = pygame.transform.scale(image, (150, 225))
                 if i[-1] == 0:
                     self.screen.blit(image1, (150, 450))
@@ -222,7 +218,7 @@ class BaseGame:
         if self.bot_cards:
             for i in self.bot_cards:
                 name_image = i[2]
-                image = self.load_image(name_image + '.png')
+                image = self.load_image(f'cards_img/{name_image}.png')
                 image1 = pygame.transform.scale(image, (150, 225))
                 if i[-1] == 0:
                     self.screen.blit(image1, (150, 100))
@@ -252,16 +248,13 @@ class BaseGame:
             y = 650
             # исправить когда будут нарисованны текстуры
             name_image = self.inventory_player[i][2]
-            image = self.load_image(name_image + '.png')
+            image = self.load_image(f'cards_img/{name_image}.png')
             image1 = pygame.transform.scale(image, (150, 225))
             self.screen.blit(image1, (x, y))
-        image = self.load_image('move.png')
-        image1 = pygame.transform.scale(image, (100, 50))
-        self.screen.blit(image1, (10, 360))
         if None != cart:
             pass
         if self.deck:
-            image = self.load_image('carta3.png')
+            image = self.load_image('icons_img/carta3.png')
             image1 = pygame.transform.scale(image, (200, 300))
             self.screen.blit(image1, (990, 200))
             font = pygame.font.Font(None, 30)
@@ -271,7 +264,7 @@ class BaseGame:
             font = pygame.font.Font(None, 30)
             text = font.render(f"{self.my_hp}/{self.bot_hp}", True, (255, 255, 255))
             self.screen.blit(text, (1000, 30))
-            image = self.load_image('heart.png')
+            image = self.load_image('icons_img/heart.png')
             image1 = pygame.transform.scale(image, (25, 25))
             self.screen.blit(image1, (1055, 25))
 
@@ -286,10 +279,10 @@ class BaseGame:
             self.dragging()
 
         if self.sound_count % 2 == 0:
-            sound_icon = pygame.transform.scale(self.load_image('sound2.png'), (25, 25))
+            sound_icon = pygame.transform.scale(self.load_image('buttons_img/sound2.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
         else:
-            sound_icon = pygame.transform.scale(self.load_image('sound1.png'), (25, 25))
+            sound_icon = pygame.transform.scale(self.load_image('buttons_img/sound1.png'), (25, 25))
             self.screen.blit(sound_icon, (1150, 30))
 
         pygame.display.flip()
@@ -301,10 +294,6 @@ class BaseGame:
         s.set_alpha(180)
         s.fill((30, 27, 24))
         self.screen.blit(s, (0, 0))
-
-        image = self.load_image('cancle.png')
-        image1 = pygame.transform.scale(image, (100, 50))
-        self.screen.blit(image1, (10, 360))
 
         for i in range(2, len(self.inventory_player) + 2):
             if i <= 4:
@@ -319,7 +308,7 @@ class BaseGame:
                 x = 800
 
             name_image = self.inventory_player[i - 2][2]
-            image = self.load_image(name_image + '.png')
+            image = self.load_image(f'cards_img/{name_image}.png')
             image1 = pygame.transform.scale(image, (150, 225))
             self.screen.blit(image1, (x, y))
             dm, hp, img = self.inventory_player[i - 2]
@@ -359,7 +348,7 @@ class BaseGame:
 
     def dragging(self, new_vil=None):
         if self.vil:
-            image = self.load_image(self.vil[2] + '.png')
+            image = self.load_image(f'cards_img/{self.vil[2]}.png')
             image1 = pygame.transform.scale(image, (150, 225))
             self.spr = self.screen.blit(image1, (self.vil_x, self.vil_y))
             font = pygame.font.Font(None, 30)
@@ -523,20 +512,20 @@ class BaseGame:
         click = pygame.mouse.get_pressed()
         if x < mouse[0] < x + width:
             if y < mouse[1] < y + height:
-                fon = pygame.transform.scale(self.load_image(photo_name1), (width, height))
+                fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name1}'), (width, height))
                 self.screen.blit(fon, (x, y))
                 if click[0] == 1:
                     pygame.mixer.Sound.play(self.but_sound)
                     pygame.time.delay(300)
             else:
-                fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
+                fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name2}'), (width, height))
                 self.screen.blit(fon, (x, y))
         else:
-            fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
+            fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name2}'), (width, height))
             self.screen.blit(fon, (x, y))
 
     def run(self, update=False):
-        pygame.mixer.music.load('data/play_mus.mp3')
+        pygame.mixer.music.load('data/musics/play_mus.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
         if update == False:
@@ -546,7 +535,9 @@ class BaseGame:
                 self.sounds_point()
                 self.buttons(10, 360, 100, 50, 'complite2.png', 'compite.png')
                 if self.event.type == pygame.QUIT:
+                    sys.exit()
                     self.close = True
+
                 if self.event.type == pygame.KEYDOWN:
                     if self.event.key == pygame.K_ESCAPE:
                         self.pause()
@@ -564,4 +555,4 @@ class BaseGame:
 
             pygame.display.flip()
             self.clock.tick(200)
-        pygame.quit()
+
