@@ -269,11 +269,11 @@ class BaseGame:
             self.screen.blit(image1, (1055, 25))
 
         elif self.my_hp < 0:
-            from final_wind_def import Lose
+            from classes.final_wind_def import Lose
             Lose()
         elif self.bot_hp < 0:
             self.counts()
-            from final_window_win import Winner
+            from classes.final_window_win import Winner
             Winner()
         if self.movement:
             self.dragging()
