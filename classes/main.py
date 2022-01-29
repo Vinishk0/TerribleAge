@@ -2,9 +2,9 @@ import os
 import sys
 import pygame
 from random import choice
-from easybot import EasyBot
-from normalbot import NormalBot
-from hardbot import HardBot
+from games_bots.easybot import EasyBot
+from games_bots.normalbot import NormalBot
+from games_bots.hardbot import HardBot
 
 
 class Levels:
