@@ -62,7 +62,11 @@ class Start:
                     pygame.time.delay(300)
                     if num == 0:
                         Levels()
+                    if num == 1:
+                        Shop()
                     if num == 2:
+                        Rules()
+                    if num == 3:
                         sys.exit()
             else:
                 fon = pygame.transform.scale(self.load_image(photo_name2), (width, height))
