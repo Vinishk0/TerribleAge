@@ -120,8 +120,8 @@ class BaseGame:
         self.inventory_card = pygame.sprite.Group()
         self.vil_x, self.vil_y, self.x_old, self.y_old, self.x_new, self.y_new = 1000, 550, 0, 0, 0, 0
         pygame.display.set_caption('TerriableAge')
-        self.my_hp = 100
-        self.bot_hp = 100
+        self.my_hp = 30
+        self.bot_hp = 30
         self.new_place = 0
         self.new_card = (0, 0)
         self.but_sound = pygame.mixer.Sound('data/musics/but_sound.mp3')
@@ -132,29 +132,17 @@ class BaseGame:
         self.bot = level
         self.close = False
         self.ch = False
-        self.deck = [(3, 2, 'card_1_1'), (4, 3, 'card_1_2'), (5, 4, 'card_1_3'), (6, 5, 'card_1_4'), (7, 6, 'card_1_5'),
-                     (2, 2, 'card_2_1'), (3, 3, 'card_2_2'), (4, 4, 'card_2_3'), (5, 4, 'card_2_4'), (4, 5, 'card_2_5'),
-                     (2, 3, 'card_3_1'), (3, 4, 'card_3_2'), (4, 5, 'card_3_3'), (5, 6, 'card_3_4'), (6, 7, 'card_3_5'),
-                     (3, 2, 'card_1_1'), (4, 3, 'card_1_2'), (5, 4, 'card_1_3'), (6, 5, 'card_1_4'), (7, 6, 'card_1_5'),
-                     (2, 2, 'card_2_1'), (3, 3, 'card_2_2'), (4, 4, 'card_2_3'), (4, 5, 'card_2_5'),
-                     (2, 3, 'card_3_1'), (3, 4, 'card_3_2'), (4, 5, 'card_3_3'), (5, 6, 'card_3_4'), (6, 7, 'card_3_5'),
-                     (3, 2, 'card_1_1'), (4, 3, 'card_1_2'), (5, 4, 'card_1_3'),
-                     (2, 2, 'card_2_1'), (3, 3, 'card_2_2'), (4, 4, 'card_2_3')
-                     ]
+        self.deck = [(3, 4, 'card_1_1'), (2, 2, 'card_1_2'), (3, 1, 'card_1_3'), (1, 3, 'card_1_4'), (3, 2, 'card_1_5'),
+                     (1, 1, 'card_1_1'), (3, 3, 'card_1_2'), (2, 3, 'card_1_3'), (1, 4, 'card_1_4'), (2, 4, 'card_1_5'),
+                     (3, 4, 'card_1_1'), (2, 2, 'card_1_2'), (3, 1, 'card_1_3'), (1, 3, 'card_1_4'), (3, 2, 'card_1_5'),
+                     (1, 1, 'card_1_1'), (3, 3, 'card_1_2'), (2, 3, 'card_1_3'), (1, 4, 'card_1_4'), (2, 4, 'card_1_5')]
         self.my_cards = []
         self.bot_cards = []
         self.list = []
         self.bot_place_occupied = []
         self.my_place_occupied = []
         self.inventory_player = []
-        f = open("Results.txt", encoding="utf8")
-        data = f.readlines()
-        if data[2] == 'True\n':
-            self.inventory_player.append((4, 4, 'card_2_3'))
-        if data[3] == 'True\n':
-            self.inventory_player.append((5, 6, 'card_3_4'))
-        if data[4] == 'True\n':
-            self.inventory_player.append((7, 6, 'card_1_5'))
+
         self.eb = EasyBot()
         self.nb = NormalBot()
         self.hb = HardBot()
@@ -181,14 +169,8 @@ class BaseGame:
         self.screen.blit(image1, (0, 0))
 
         if None != index:
-            if not self.vil:
-                self.vil = self.inventory_player[index]
-                del self.inventory_player[index]
-            else:
-                self.inventory_player.append(self.vil)
-                self.vil = self.inventory_player[index]
-                del self.inventory_player[index]
-
+            self.vil = self.inventory_player[index]
+            del self.inventory_player[index]
         if self.vil and not self.movement:
             image = self.load_image(f'cards_img/{self.vil[2]}.png')
             image1 = pygame.transform.scale(image, (150, 225))
@@ -284,7 +266,7 @@ class BaseGame:
             self.screen.blit(text, (1000, 30))
             image = self.load_image('icons_img/heart.png')
             image1 = pygame.transform.scale(image, (25, 25))
-            self.screen.blit(image1, (1075, 25))
+            self.screen.blit(image1, (1055, 25))
 
         elif self.my_hp < 0:
             from classes.final_wind_def import Lose
@@ -521,15 +503,8 @@ class BaseGame:
         count = int(data[0])
         f.close()
         f = open("Results.txt", 'w')
-        if self.bot == 'easy':
-            count += 5
-        elif self.bot == 'normal':
-            count += 10
-        elif self.bot == 'hard':
-            count += 15
-        data[1] = self.bot + '\n'
-        data[0] = str(count) + '\n'
-        f.writelines(data)
+        count += 10
+        f.write(str(count))
         f.close()
 
     def buttons(self, x, y, width, height, photo_name1, photo_name2):
@@ -580,3 +555,4 @@ class BaseGame:
 
             pygame.display.flip()
             self.clock.tick(200)
+

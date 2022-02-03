@@ -84,17 +84,7 @@ class Winner:
         self.screen.blit(text, (360, -10))
 
         font = pygame.font.Font(None, 70)
-        f = open("Results.txt", encoding="utf8")
-        data = f.readlines()
-        bot = data[1]
-        if bot == 'easy\n':
-            n = 5
-        elif bot == 'normal\n':
-            n = 10
-        else:
-            n = 15
-        f.close()
-
+        n = 10
         text = font.render(f"Ваш результат: {n}", True, (216, 112, 147))
         self.screen.blit(text, (420, 220))
         self.buttons(1000, 700, 170, 90, 'cont_win_2.png', 'cont_win.png', 0)
