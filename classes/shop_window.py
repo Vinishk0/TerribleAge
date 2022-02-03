@@ -54,6 +54,39 @@ class Shop:
                     if num == 0:
                         from start_window import Start
                         Start()
+                    if num == 1:
+                        f = open("Results.txt", 'r', encoding="utf8")
+                        data = f.readlines()
+                        money = data[0]
+                        if int(money) >= 10 and data[2] != 'True\n':
+                            data[2] = 'True\n'
+                            data[0] = str(int(money) - 10) + '\n'
+                        f.close()
+                        f = open("Results.txt", 'w', encoding="utf8")
+                        f.writelines(data)
+                        f.close()
+                    if num == 2:
+                        f = open("Results.txt", 'r', encoding="utf8")
+                        data = f.readlines()
+                        money = data[0]
+                        if int(money) >= 50 and data[3] != 'True\n':
+                            data[3] = 'True\n'
+                            data[0] = str(int(money) - 50) + '\n'
+                            f.close()
+                            f = open("Results.txt", 'w', encoding="utf8")
+                            f.writelines(data)
+                            f.close()
+                    if num == 3:
+                        f = open("Results.txt", 'r', encoding="utf8")
+                        data = f.readlines()
+                        money = data[0]
+                        if int(money) >= 100 and data[4] != 'True\n':
+                            data[4] = 'True\n'
+                            data[0] = str(int(money) - 100) + '\n'
+                            f.close()
+                            f = open("Results.txt", 'w', encoding="utf8")
+                            f.writelines(data)
+                            f.close()
             else:
                 fon = pygame.transform.scale(self.load_image(f'buttons_img/{photo_name2}'), (width, height))
                 self.screen.blit(fon, (x, y))
